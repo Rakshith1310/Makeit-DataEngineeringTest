@@ -19,7 +19,7 @@ TABLES = {
 # Initialize ClickHouse Client
 clickhouse_client = Client(host=CLICKHOUSE_HOST)
 
-# Kafka Consumer Setup
+
 consumer = KafkaConsumer(
     *TOPICS,
     bootstrap_servers=[KAFKA_BROKER],
@@ -29,9 +29,8 @@ consumer = KafkaConsumer(
     value_deserializer=lambda m: json.loads(m.decode("utf-8")),
 )
 
-print("✅ Consuming messages from Kafka and inserting into ClickHouse...")
+print("Consuming messages from Kafka and inserting into ClickHouse...")
 
-# Function to parse datetime safely
 def parse_datetime(value):
     try:
         return datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f") if value else None
@@ -42,7 +41,7 @@ def parse_datetime(value):
 for message in consumer:
     topic = message.topic
     event = message.value
-    print(f"📥 Processing event from {topic}: {event}")
+    print(f"Processing event from {topic}: {event}")
 
     try:
         if topic == "enriched_events":
@@ -82,10 +81,10 @@ for message in consumer:
                 [(timestamp, event_data)]
             )
 
-        print(f"✅ Inserted into {TABLES[topic]}: {event}")
+        print(f"Inserted into {TABLES[topic]}: {event}")
 
     except Exception as e:
-        print(f"❌ Error inserting into ClickHouse ({TABLES[topic]}): {e}")
+        print(f"Error inserting into ClickHouse ({TABLES[topic]}): {e}")
 
 # Close consumer
 consumer.close()
