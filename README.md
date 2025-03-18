@@ -19,6 +19,12 @@ We define three Kafka topics:
 - `country_event_averages`: Rolling averages of events per country.
 - `dlq`: (Dead Letter Queue) Stores invalid records for debugging.
 
+Start Kafka server
+```
+/opt/kafka/bin/kafka-server-start.sh /opt/kafka/config/server.properties &
+
+```
+
 Create the topics:
 ```
 /usr/local/kafka/bin/kafka-topics. --create --topic user_events --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1
